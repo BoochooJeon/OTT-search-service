@@ -15,7 +15,7 @@ const connection = mysql.createConnection({
 
 const app = express();
 
-const PORT = 3001;
+const PORT = 3000;
 
 app.listen(PORT, () => {
   console.log(`Server On : http://localhost:${PORT}/`);
@@ -25,7 +25,7 @@ app.listen(PORT, () => {
 app.use(bodyParser.json());
 
 
-//http://localhost:3000/register?username=alex123&password=pass456&name=Alex%20Johnson&email=alex.johnson%40example.com&birth=1992-04-15&favorite_genre=Drama&subscript_ott=Hulu
+//http://localhost:3000/register?username=dgwogh&password=!!Wjswogh3232&name=BoochooJeon%20Johnson&email=dgwogh%dgist.ac.kr&birth=1998-10-03&favorite_genre=Drama&subscript_ott=NETFLIX
 // 회원가입 라우트
 app.get('/register', (req, res) => {
   console.log("pass");
@@ -60,5 +60,96 @@ app.get('/register', (req, res) => {
     connection.end();
   });
 });
+
+
+async function authenticateAndGetUserInfo(username, password) {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM users WHERE username = ?';
+    connection.query(query, [username], async (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      if (results.length === 0) {
+        return resolve(null); // 사용자가 존재하지 않음
+      }
+      const user = results[0];
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return resolve(null); // 비밀번호가 일치하지 않음
+      }
+      // 민감한 정보 삭제
+      delete user.password;
+      resolve(user); // 사용자 정보 반환
+    });
+  });
+}
+
+// 로그인 라우트
+//http://localhost:3000/login?username=dgwogh&password=201711161
+app.get('/login', async (req, res) => {
+  const { username, password } = req.query;
+  try {
+    const user = await authenticateAndGetUserInfo(username, password);
+    if (user) {
+      res.json(user); // 사용자 정보 반환
+    } else {
+      res.status(401).send('Invalid credentials'); // 인증 실패
+    }
+  } catch (error) {
+    res.status(500).send('Server error');
+  }
+});
+
+
+// 영화 이름 -> 영화 정보 , 없으면 없다고
+// 특정 영화가 상영 중인 OTT 플랫폼 조회 API
+//http://localhost:3000/login?title=Movie Title 2
+app.get('/movie-ott', (req, res) => {
+  const movieTitle = req.query.title;
+
+  if (!movieTitle) {
+      return res.status(400).send('Movie title is required');
+  }
+
+  const query = `
+      SELECT m.title, o.name AS ott_platform
+      FROM movies m
+      JOIN movies_ott mo ON m.movie_id = mo.movie_id
+      JOIN ott_platforms o ON mo.ott_id = o.ott_id
+      WHERE m.title = ?
+  `;
+
+  connection.query(query, [movieTitle], (err, results) => {
+      if (err) {
+          console.error('Error querying movie OTT information: ' + err);
+          return res.status(500).send('Error fetching movie OTT information');
+      }
+      res.json(results);
+  });
+});
+
+
+// 영화 추천 장르, n개 (최대 10개까지 가능)
+//http://localhost:3000/movies?genre=Action&limit=1
+app.get('/movies', (req, res) => {
+  const genre = req.query.genre;
+  const limit = parseInt(req.query.limit, 10);
+
+  if (!genre || isNaN(limit)) {
+      return res.status(400).send('Invalid genre or limit');
+  }
+
+  const query = 'SELECT * FROM movies WHERE genre = ? LIMIT ?';
+  connection.query(query, [genre, limit], (err, results) => {
+      if (err) {
+          console.error('Error querying movies: ' + err);
+          return res.status(500).send('Error fetching movies');
+      }
+      res.json(results);
+  });
+});
+
+
+
 
 
