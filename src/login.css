@@ -1,17 +1,8 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #3498db; /* 파란색 */
-  }
-  
+
   .container {
-    width: 300px;
+    width: 400px;
     margin-top: -50px;
+    
   }
   
   .login-box {
@@ -37,17 +28,11 @@ body {
     flex-direction: column;
   }
   
-  input[type="text"],
-  input[type="password"],
-  input[type="submit"] {
-    margin-bottom: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
+
   
-  button[type="submit"] {
-    background-color: #3498db; /* 파란색 */
+  button[type="Sign_in"],
+  button[type="Sign_up"] {
+    background-color: #5bc2e7; /* 파란색 */
     color: white;
     font-weight: bold;
     cursor: pointer;
@@ -55,5 +40,9 @@ body {
     border: none; /* 기본 테두리 제거 */
     border-radius: 8px; /* 모서리 둥글게 */
     font-size: 16px; /* 글자 크기 조정 */
-    width: 100%; /* 폭을 부모 요소의 전체 너비로 설정 */
+    width: 40%; /* 폭을 부모 요소의 전체 너비로 설정 */
+    margin-left: 5px;
+    margin-right: 5px;
+    font-family: 'Pretendard_SemiBold';
+
   }
