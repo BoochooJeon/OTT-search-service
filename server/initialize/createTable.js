@@ -5,7 +5,7 @@ const connection = mysql.createConnection({
     port: 3306,
     user: 'root',      // 데이터베이스 사용자 이름
     password: '201711161',      // 데이터베이스 비밀번호
-    database: 'ott',
+    database: 'ott-v.0.1',
   });
   
 
@@ -52,7 +52,7 @@ connection.connect(err => {
     movie_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     director VARCHAR(255),
-    genre ENUM('Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Romance', 'SF', 'Thriller', 'Western', 'Documentary', 'Animation', 'Musical') NOT NULL,
+    genre ENUM('Action', 'Adventure', 'Comedy', 'Horror', 'Romance', 'SF', 'Thriller', 'Animation') NOT NULL,
     episodes INT,
     runtime INT NOT NULL,
     poster_location VARCHAR(500), 
