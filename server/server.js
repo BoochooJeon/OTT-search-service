@@ -103,7 +103,7 @@ app.get('/login', async (req, res) => {
 
 // 영화 이름 -> 영화 정보 , 없으면 없다고
 // 특정 영화가 상영 중인 OTT 플랫폼 조회 API
-//http://localhost:3000/login?title=Movie Title 2
+//http://localhost:3000/movie-ott?title=Movie Title 2
 app.get('/movie-ott', (req, res) => {
   const movieTitle = req.query.title;
 
@@ -112,12 +112,24 @@ app.get('/movie-ott', (req, res) => {
   }
 
   const query = `
-      SELECT m.title, o.name AS ott_platform
-      FROM movies m
-      JOIN movies_ott mo ON m.movie_id = mo.movie_id
-      JOIN ott_platforms o ON mo.ott_id = o.ott_id
-      WHERE m.title = ?
-  `;
+        SELECT 
+            m.title, 
+            m.director, 
+            m.genre, 
+            m.runtime, 
+            m.poster_location, 
+            GROUP_CONCAT(o.name SEPARATOR ', ') AS ott_platforms
+        FROM 
+            movies m
+        JOIN 
+            movies_ott mo ON m.movie_id = mo.movie_id
+        JOIN 
+            ott_platforms o ON mo.ott_id = o.ott_id
+        WHERE 
+            m.title = ?
+        GROUP BY 
+            m.movie_id;
+    `;
 
   connection.query(query, [movieTitle], (err, results) => {
       if (err) {
