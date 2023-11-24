@@ -2,6 +2,7 @@ const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
 const bodyParser = require("body-parser");
 const express = require("express");
+const cors = require('cors');
 
 
 const connection = mysql.createConnection({
@@ -23,7 +24,7 @@ app.listen(PORT, () => {
 
 
 app.use(bodyParser.json());
-
+app.use(cors());
 
 //http://localhost:3000/register?username=dgwogh&password=!!Wjswogh3232&name=BoochooJeon%20Johnson&email=dgwogh%dgist.ac.kr&birth=1998-10-03&favorite_genre=Drama&subscript_ott=NETFLIX
 // 회원가입 라우트
@@ -57,7 +58,6 @@ app.get('/register', (req, res) => {
       }
       res.status(201).send({ message: 'User registered successfully', userId: results.insertId });
     });
-    connection.end();
   });
 });
 

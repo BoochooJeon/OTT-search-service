@@ -17,7 +17,7 @@ connection.connect(err => {
   console.log('Connected to the MySQL server.');
 
   // 데이터베이스 생성
-  connection.query("CREATE DATABASE IF NOT EXISTS ott", function (err, result) {
+  connection.query("CREATE DATABASE IF NOT EXISTS ott-v.0.1", function (err, result) {
     if (err) throw err;
     console.log("Database created");
   });
