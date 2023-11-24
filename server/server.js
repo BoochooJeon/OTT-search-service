@@ -10,13 +10,13 @@ const connection = mysql.createConnection({
   port: 3306,
   user: 'root',      // 데이터베이스 사용자 이름
   password: '201711161',      // 데이터베이스 비밀번호
-  database: 'ott-v.0.1',
+  database: 'ott-v.0.2',
 });
 
 
 const app = express();
 
-const PORT = 3000;
+const PORT = 3001;
 
 app.listen(PORT, () => {
   console.log(`Server On : http://localhost:${PORT}/`);
@@ -26,7 +26,7 @@ app.listen(PORT, () => {
 app.use(bodyParser.json());
 app.use(cors());
 
-//http://localhost:3000/register?username=dgwogh&password=!!Wjswogh3232&name=BoochooJeon%20Johnson&email=dgwogh%dgist.ac.kr&birth=1998-10-03&favorite_genre=Drama&subscript_ott=NETFLIX
+//http://localhost:3001/register?username=dgwogh&password=!!Wjswogh3232&name=BoochooJeon%20Johnson&email=dgwogh%dgist.ac.kr&birth=1998-10-03&favorite_genre=Drama&subscript_ott=NETFLIX
 // 회원가입 라우트
 app.get('/register', (req, res) => {
   console.log("pass");
@@ -85,7 +85,7 @@ async function authenticateAndGetUserInfo(username, password) {
 }
 
 // 로그인 라우트
-//http://localhost:3000/login?username=dgwogh&password=201711161
+//http://localhost:3001/login?username=dgwogh&password=201711161
 app.get('/login', async (req, res) => {
   const { username, password } = req.query;
   try {
@@ -103,9 +103,11 @@ app.get('/login', async (req, res) => {
 
 // 영화 이름 -> 영화 정보 , 없으면 없다고
 // 특정 영화가 상영 중인 OTT 플랫폼 조회 API
-//http://localhost:3000/movie-ott?title=Movie Title 2
+//http://localhost:3001/movie-ott?title=Movie Title 2
 app.get('/movie-ott', (req, res) => {
   const movieTitle = req.query.title;
+  console.log("passing here");
+  console.log("movieTitle: ", movieTitle);
 
   if (!movieTitle) {
       return res.status(400).send('Movie title is required');
@@ -136,13 +138,14 @@ app.get('/movie-ott', (req, res) => {
           console.error('Error querying movie OTT information: ' + err);
           return res.status(500).send('Error fetching movie OTT information');
       }
+      console.log(results);
       res.json(results);
   });
 });
 
 
 // 영화 추천 장르, n개 (최대 10개까지 가능)
-//http://localhost:3000/movies?genre=Action&limit=1
+//http://localhost:3001/movies?genre=Action&limit=1
 app.get('/movies', (req, res) => {
   const genre = req.query.genre;
   const limit = parseInt(req.query.limit, 10);

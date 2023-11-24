@@ -5,7 +5,7 @@ const connection = mysql.createConnection({
     port: 3306,
     user: 'root',      // 데이터베이스 사용자 이름
     password: '201711161',      // 데이터베이스 비밀번호
-    database: 'ott-v.0.1',
+    database: 'ott-v.0.2',
   });
   
 
@@ -16,11 +16,11 @@ connection.connect(err => {
 
   console.log('Connected to the MySQL server.');
 
-  // 데이터베이스 생성
-  connection.query("CREATE DATABASE IF NOT EXISTS ott-v.0.1", function (err, result) {
-    if (err) throw err;
-    console.log("Database created");
-  });
+  // // 데이터베이스 생성
+  // connection.query("CREATE DATABASE IF NOT EXISTS ott-v.0.2", function (err, result) {
+  //   if (err) throw err;
+  //   console.log("Database created");
+  // });
 
 
   // 테이블 생성
@@ -53,7 +53,6 @@ connection.connect(err => {
     title VARCHAR(255) NOT NULL,
     director VARCHAR(255),
     genre ENUM('Action', 'Adventure', 'Comedy', 'Horror', 'Romance', 'SF', 'Thriller', 'Animation') NOT NULL,
-    episodes INT,
     runtime INT NOT NULL,
     poster_location VARCHAR(500), 
     UNIQUE (title)
