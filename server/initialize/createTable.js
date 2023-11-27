@@ -4,7 +4,7 @@ const connection = mysql.createConnection({
     host: '127.0.0.1', // 데이터베이스 서버 주소
     port: 3306,
     user: 'root',      // 데이터베이스 사용자 이름
-    password: '201711161',      // 데이터베이스 비밀번호
+    password: 'anscksdn99',      // 데이터베이스 비밀번호
     database: 'ott-v.0.2',
   });
   

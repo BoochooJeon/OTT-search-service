@@ -9,7 +9,7 @@ const connection = mysql.createConnection({
   host: '127.0.0.1', // 데이터베이스 서버 주소
   port: 3306,
   user: 'root',      // 데이터베이스 사용자 이름
-  password: '201711161',      // 데이터베이스 비밀번호
+  password: 'anscksdn99',      // 데이터베이스 비밀번호
   database: 'ott-v.0.2',
 });
 
@@ -138,8 +138,8 @@ app.get('/movie-ott', (req, res) => {
           console.error('Error querying movie OTT information: ' + err);
           return res.status(500).send('Error fetching movie OTT information');
       }
-      console.log(results);
-      res.json(results);
+      console.log(results[0]);
+      res.json(results[0] || null);
   });
 });
 
