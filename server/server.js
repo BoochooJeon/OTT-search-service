@@ -144,6 +144,45 @@ app.get('/movie-ott', (req, res) => {
 });
 
 
+//http://localhost:3001/delete?title=실미도
+app.get('/delete', (req, res) => {
+  const movieTitle = req.query.title;
+
+  if (!movieTitle) {
+      return res.status(400).send('Movie title is required');
+  }
+  connection.query('SELECT movie_id FROM movies WHERE title = ?', [movieTitle], (err, results) => {
+    if (err) {
+        console.error('Error finding movie: ' + err);
+        return;
+    }
+    if (results.length === 0) {
+        console.log('No movie found with the given title.');
+        return;
+    }
+
+    const movieId = results[0].movie_id;
+
+    // movies_ott 테이블에서 관련 레코드 삭제
+    connection.query('DELETE FROM movies_ott WHERE movie_id = ?', [movieId], (err, results) => {
+        if (err) {
+            console.error('Error deleting from movies_ott: ' + err);
+            return;
+        }
+
+        // movies 테이블에서 영화 삭제
+        connection.query('DELETE FROM movies WHERE movie_id = ?', [movieId], (err, results) => {
+            if (err) {
+                console.error('Error deleting movie: ' + err);
+                return;
+            }
+
+            console.log('Movie deleted successfully.');
+        });
+    });
+});
+});
+
 // 영화 추천 장르, n개 (최대 10개까지 가능)
 //http://localhost:3001/movies?genre=Action&limit=1
 app.get('/movies', (req, res) => {
